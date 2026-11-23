@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: muse2api
+    runtime: docker
+    region: ohio
+    plan: free
+    branch: main
+    envVars:
+      - key: MUSE2API_HOST
+        value: 0.0.0.0
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: "10000"
+      - key: MUSE2API_PORT
+        value: "10000"
+      - key: MUSE2API_NO_SANDBOX
+        value: "1"
+      - key: MUSE2API_API_KEY
+        generateValue: true
+

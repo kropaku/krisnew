@@ -76,16 +76,24 @@ class ChromiumProcess:
             "--no-default-browser-check",
             "--disable-dev-shm-usage",
             "--disable-background-networking",
+            "--disable-extensions",
+            "--disable-sync",
             "--autoplay-policy=no-user-gesture-required",
-            "--window-size=1440,2200",
+            "--window-size=1280,1024",
             "about:blank",
         ]
         if self.proxy:
             args.insert(1, f"--proxy-server={self.proxy}")
         if self.headless:
             args[1:1] = ["--headless=new", "--disable-gpu"]
-        if hasattr(os, "geteuid") and os.geteuid() == 0:
+        no_sandbox = (
+            (hasattr(os, "geteuid") and os.geteuid() == 0)
+            or os.environ.get("MUSE2API_NO_SANDBOX") == "1"
+            or os.path.exists("/.dockerenv")
+        )
+        if no_sandbox:
             args.insert(1, "--no-sandbox")
+            args.insert(2, "--disable-setuid-sandbox")
 
         log.info("launching Chromium: %s", self.executable)
         self.proc = await asyncio.create_subprocess_exec(

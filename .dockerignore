@@ -1,0 +1,17 @@
+.git
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.ruff_cache
+data
+*.db
+*.log
+.env
+cheat-clip-pro
+tests
+docs
+
