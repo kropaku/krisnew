@@ -29,9 +29,13 @@ class JsonAccountStore:
         if not self.path.is_file():
             return []
         raw = await asyncio.to_thread(self.path.read_text, encoding="utf-8")
-        if not raw.strip():
+        clean_raw = raw.strip("\x00 \t\r\n")
+        if not clean_raw:
             return []
-        return [Account.model_validate(item) for item in json.loads(raw)]
+        try:
+            return [Account.model_validate(item) for item in json.loads(clean_raw)]
+        except Exception:
+            return []
 
     async def save(self, accounts: list[Account]) -> None:
         payload = json.dumps(
